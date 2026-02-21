@@ -1,86 +1,123 @@
 # Digital Logbook
-A smart, OCR-powered alternative to the traditional paper logbook — built for copier technicians who want to self-manage their inventory and usage tracking efficiently. This tool replaces the physical logbook with a digital, automated, and searchable system designed for modern techs who want independence, speed, and data-backed decision making.
 
-## Key Features
-- Full OCR Pipeline using Tesseract to scan usage pages and extract metadata (brand, serial number, date)
-- Strict PDF Renaming and folder placement for tidy storage and traceability
-- Barcode Data Extraction (part numbers and quantities used) post-OCR
-- SQLite Database Integration for centralized part usage tracking
-- Built-in Report Generation for 1/3/6/9/12-month windows or since last inventory — exported to CSV
-- Modern GUI using CustomTkinter
-- Multiprocessing support to significantly speed up OCR and barcode processing
-- Folder Structure Auto-Setup — no manual prep needed
-- Manual Review System with PDF Viewer to inspect/edit OCR-failed documents
-- Persistent Settings stored in a user-facing JSON config file
+![Python](https://img.shields.io/badge/Python-3.12+-blue?logo=python&logoColor=white)
+![CustomTkinter](https://img.shields.io/badge/GUI-CustomTkinter-green)
+![SQLite](https://img.shields.io/badge/Database-SQLite-lightblue?logo=sqlite)
+![Tesseract](https://img.shields.io/badge/OCR-Tesseract-orange)
+![Status](https://img.shields.io/badge/Status-Mostly%20Complete-brightgreen)
 
-# Menu Breakdown
-### Process Menu
+**Author:** Zach Reid | [zforgehub.dev](https://zforgehub.dev)
 
-- Scans Ready to Sort folder
-- OCRs all pages using multiprocessing
-- Flags and logs files missing key metadata (serial number, brand, or date)
-- Renames + relocates successful pages
-- Rebuilds a fresh file list from the Parts Used folder (if not already added to DB)
-- Extracts barcode data (also multiprocessed) for part/quantity
-- Inputs structured data into the central database
-- Flags pages with missing barcode data for Manual Review
+---
 
-### Manual Review Menu
+## Overview
 
-- Simple PDF viewer for flagged documents
-- Auto-fills known data into fields
-- Allows manual entry of missing info (serial number, date, etc.)
-- On completion, feeds updated data into the main pipeline and clears it from the review list
+Digital Logbook is an OCR-powered replacement for the paper logbook used by copier and printer field technicians to track parts usage across service calls. It automates the extraction, organization, and reporting of service data — turning a manual, paper-based workflow into a searchable, data-backed system.
 
-### Settings Menu
+Built initially for personal use, the architecture is designed with broader adoption in mind.
 
-- Change directory paths for:
-  - Folders for storing folder (Ready to Sort, Manual Review, Parts Log, Inventory, etc)
-  - Database
-- Save updated settings to a persistent config.json
+---
 
-Reports Menu
+## The Workflow It Replaces
 
-- Generate CSV reports for:
-  - 1 / 3 / 6 / 9 / 12-month spans
-  - Since last inventory date (not yet implemented fully)
-- Output includes:
-  - Serial number
-  - Date
-  - Part(s) used and quantity
-  - File path for reference
+Field technicians traditionally track parts usage by printing a **counter/meter page** directly from the device being serviced — a page that contains the machine's serial number, brand, and current meter reads. Parts used during the service call are recorded by affixing **barcoded parts stickers** directly onto the meter page, using the typically abundant whitespace to avoid covering key data.
 
-### File Sorting & Organization
-- Files are categorized into brand-specific folders (Kyocera, HP, Inventory, Canon) or flagged for manual review if essential data is missing.
-- Customizable folder structure includes:
-  - Unsorted: Files pending OCR processing
-  - runLogs: Runtime logs
-  - Manual_Sort: Files requiring manual review
-  - Logs: Meter pages with stickers
-  - Inventory Restock: Pages related to inventory management
+This meter page with stickers becomes a self-documenting service record — tying machine identity, service date, and parts used together in a single physical document.
 
+Previously, these pages were either filed physically or manually transcribed. Digital Logbook automates the entire pipeline:
 
-# Stretch Goals
-📈 Advanced Reporting
+1. Meter pages (with stickers) are scanned to PDF and dropped into a watched folder
+2. OCR extracts machine metadata — brand, serial number, and date — using manufacturer-specific keywords
+3. Barcode extraction pulls part numbers and quantities from the affixed stickers
+4. All data is structured and stored in a central SQLite database
+5. Reports are generated on demand for any time window
 
-- Usage Summary Reports (Implemented)
-  - Show total quantity of each part used, sorted by highest usage
-  - Includes daily/weekly usage averages and suggested car stock values per item
+---
 
-- Stock Comparison Tool (Implemented)
-  - Compare parts used during report timeframe to user-inputted car stock
-  - Highlights overstock, understock, and dead inventory (never used)
+## Features
 
-- Inventory Management Menu (Implemented)
-  - Add/import car stock (CSV or manual entry)
-  - Save and update inventory levels per tech
-  - Integrate with usage reports for live insights
+### OCR Pipeline
+- Processes PDFs using **Tesseract OCR** with **multiprocessing** for significantly faster batch handling
+- Identifies brand, serial number, and date using manufacturer-specific keyword matching
+- Handles **Kyocera, HP, Canon**, and more
+- Flags documents with missing or unreadable metadata for manual review rather than silently failing
+
+### Barcode Extraction
+- Extracts part numbers and quantities from barcoded stickers on the meter page
+- Also multiprocessed for performance
+- Flags pages with missing barcode data for manual review
+
+### Manual Review System
+- Built-in **PDF viewer** for inspecting flagged documents without leaving the application
+- Auto-fills any data successfully extracted, leaving only the missing fields for manual entry
+- On completion, feeds corrected data back into the main pipeline and clears it from the review queue
+
+### Database & Reporting
+- All processed data stored in a **SQLite database** for fast querying and long-term tracking
+- Report generation for **1, 3, 6, 9, and 12-month** windows, exportable to CSV
+- Reports include serial number, date, parts used, quantities, and file path references
+
+### Inventory Management
+- Import car stock (technician vehicle inventory) via CSV or manual entry
+- **Stock comparison tool** — compares parts used in a report window against current car stock
+- Highlights overstock, understock, and dead inventory (parts carried but never used)
+- Suggests car stock values based on historical usage patterns
+
+### File Organization
+- Automatic folder structure setup — no manual prep required
+- Successful files renamed with structured metadata and sorted into brand-specific folders
+- Failed files routed to manual review folder automatically
+
+### Settings
+- All directory paths and configuration stored in a user-facing `config.json`
+- Fully customizable folder structure via the Settings menu
+
+---
+
+## Technical Highlights
+
+| Component | Technology |
+|---|---|
+| Language | Python 3.12+ |
+| GUI | CustomTkinter |
+| OCR | Tesseract (via pytesseract) |
+| PDF Handling | PyMuPDF (fitz) |
+| Barcode Extraction | pyzbar / similar |
+| Database | SQLite |
+| Performance | multiprocessing (OCR + barcode) |
+| Image Processing | Pillow (PIL) |
+| Fuzzy Matching | rapidfuzz |
+
+### Architecture Notes
+
+- **Multiprocessing** is applied to both the OCR and barcode extraction stages independently, keeping batch processing times low even on large document sets
+- **Manufacturer-specific keyword matching** with fuzzy matching via `rapidfuzz` handles real-world OCR noise and inconsistent formatting across device brands
+- The **manual review system** was designed as a first-class feature, not an afterthought — the assumption is that OCR will sometimes fail, and the workflow accounts for that gracefully
+- Folder structure and database paths are fully configurable, making the tool portable across different technician setups
+
+---
+
+## Planned Enhancements
+
+- Replace current update mechanism with a **HMAC-authenticated API update system** (consistent with other projects in this portfolio)
+- Further report types and export formats
+
+---
 
 ## Requirements
-- Software: Python 3.12+
-- Libraries: tkinter, webbrowser, os, json, pathlib, re, datetime, rapidfuzz, logging, shutil, glob, PIL, fitz, pytesseract
-- Dependencies: Tesseract-OCR
-- Tesseract-OCR: Put in PATH via System Environment Variables
 
-## License
-This project is licensed under the MIT License, allowing for open use and modification.
+- Python 3.12+
+- [Tesseract-OCR](https://github.com/tesseract-ocr/tesseract) installed and added to system PATH via Environment Variables
+- Dependencies: `customtkinter`, `pytesseract`, `Pillow`, `PyMuPDF`, `rapidfuzz`, `sqlite3`
+
+---
+
+## Status
+
+Core pipeline, manual review system, database, reporting, and inventory management are complete and working. Planned enhancements are noted above but are lower priority while other active projects take precedence.
+
+---
+
+## Links
+
+- 🌐 [zforgehub.dev](https://zforgehub.dev) — Portfolio & DevHub
