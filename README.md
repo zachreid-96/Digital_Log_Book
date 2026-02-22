@@ -12,7 +12,7 @@
 
 ## Overview
 
-Digital Logbook is an OCR-powered replacement for the paper logbook used by copier and printer field technicians to track parts usage across service calls. It automates the extraction, organization, and reporting of service data — turning a manual, paper-based workflow into a searchable, data-backed system.
+Digital Logbook is an OCR-powered replacement for the paper logbook used by copier and printer field technicians to track parts usage across service calls. It automates the extraction, organization, and reporting of service data, turning a manual, paper-based workflow into a searchable, data-backed system.
 
 Built initially for personal use, the architecture is designed with broader adoption in mind.
 
@@ -20,14 +20,14 @@ Built initially for personal use, the architecture is designed with broader adop
 
 ## The Workflow It Replaces
 
-Field technicians traditionally track parts usage by printing a **counter/meter page** directly from the device being serviced — a page that contains the machine's serial number, brand, and current meter reads. Parts used during the service call are recorded by affixing **barcoded parts stickers** directly onto the meter page, using the typically abundant whitespace to avoid covering key data.
+Field technicians traditionally track parts usage by printing a **counter/meter page** directly from the device being serviced, a page that contains the machine's serial number, brand, and current meter reads. Parts used during the service call are recorded by affixing **barcoded parts stickers** directly onto the meter page, using the typically abundant whitespace to avoid covering key data.
 
-This meter page with stickers becomes a self-documenting service record — tying machine identity, service date, and parts used together in a single physical document.
+This meter page with stickers becomes a self-documenting service record, tying machine identity, service date, and parts used together in a single physical document.
 
 Previously, these pages were either filed physically or manually transcribed. Digital Logbook automates the entire pipeline:
 
 1. Meter pages (with stickers) are scanned to PDF and dropped into a watched folder
-2. OCR extracts machine metadata — brand, serial number, and date — using manufacturer-specific keywords
+2. OCR extracts machine metadata, brand, serial number, and date, using manufacturer-specific keywords
 3. Barcode extraction pulls part numbers and quantities from the affixed stickers
 4. All data is structured and stored in a central SQLite database
 5. Reports are generated on demand for any time window
@@ -59,12 +59,12 @@ Previously, these pages were either filed physically or manually transcribed. Di
 
 ### Inventory Management
 - Import car stock (technician vehicle inventory) via CSV or manual entry
-- **Stock comparison tool** — compares parts used in a report window against current car stock
+- **Stock comparison tool**, compares parts used in a report window against current car stock
 - Highlights overstock, understock, and dead inventory (parts carried but never used)
 - Suggests car stock values based on historical usage patterns
 
 ### File Organization
-- Automatic folder structure setup — no manual prep required
+- Automatic folder structure setup, no manual prep required
 - Successful files renamed with structured metadata and sorted into brand-specific folders
 - Failed files routed to manual review folder automatically
 
@@ -92,7 +92,7 @@ Previously, these pages were either filed physically or manually transcribed. Di
 
 - **Multiprocessing** is applied to both the OCR and barcode extraction stages independently, keeping batch processing times low even on large document sets
 - **Manufacturer-specific keyword matching** with fuzzy matching via `rapidfuzz` handles real-world OCR noise and inconsistent formatting across device brands
-- The **manual review system** was designed as a first-class feature, not an afterthought — the assumption is that OCR will sometimes fail, and the workflow accounts for that gracefully
+- The **manual review system** was designed as a first-class feature, not an afterthought, the assumption is that OCR will sometimes fail, and the workflow accounts for that gracefully
 - Folder structure and database paths are fully configurable, making the tool portable across different technician setups
 
 ---
@@ -120,4 +120,4 @@ Core pipeline, manual review system, database, reporting, and inventory manageme
 
 ## Links
 
-- 🌐 [zforgehub.dev](https://zforgehub.dev) — Portfolio & DevHub
+- [zforgehub.dev](https://zforgehub.dev), Portfolio & DevHub
