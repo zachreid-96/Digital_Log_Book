@@ -6,9 +6,9 @@ import ctypes
 import customtkinter as ct
 
 from PIL import Image
-from config import DirectoryManager
-from file_manager import move_file_manual_sort
-from database_handler import database_add_files
+from configs.config import DirectoryManager
+from handlers.file_manager import move_file_manual_sort
+from database.database_handler import database_add_files
 
 def get_window_scaling():
     try:

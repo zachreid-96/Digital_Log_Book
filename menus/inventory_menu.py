@@ -4,7 +4,7 @@ import csv
 import customtkinter as ct
 
 from math import ceil
-from config import DirectoryManager
+from configs.config import DirectoryManager
 from datetime import datetime, timedelta
 from tkinter import filedialog, StringVar
 from dateutil.relativedelta import relativedelta

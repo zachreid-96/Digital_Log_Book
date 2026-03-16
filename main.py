@@ -6,16 +6,16 @@ import shutil
 import customtkinter as ct
 
 from gc import collect
-from help_menu import HelpMenu
-from about_menu import AboutMenu
-from config import DirectoryManager
-from process_menu import ProcessMenu
-from reports_menu import ReportsMenu
-from settings_menu import SettingsMenu
+from menus.help_menu import HelpMenu
+from menus.about_menu import AboutMenu
+from configs.config import DirectoryManager
+from menus.process_menu import ProcessMenu
+from menus.reports_menu import ReportsMenu
+from menus.settings_menu import SettingsMenu
 from CTkMessagebox import CTkMessagebox
-from directory_menu import DirectoryMenu
-from inventory_menu import InventoryMenu
-from manual_review_menu import PDFViewer
+from menus.directory_menu import DirectoryMenu
+from menus.inventory_menu import InventoryMenu
+from menus.manual_review_menu import PDFViewer
 
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)

@@ -9,7 +9,7 @@ from pathlib import Path
 from datetime import datetime
 from pyzbar.pyzbar import decode
 from PIL import Image, ImageFilter
-from config import DirectoryManager
+from configs.config import DirectoryManager
 from collections import Counter, defaultdict
 
 def resize_image(image, scale_factor=1.5):

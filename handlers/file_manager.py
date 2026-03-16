@@ -3,7 +3,7 @@ import glob
 import shutil
 
 from datetime import datetime
-from config import convert_month_str, DirectoryManager
+from configs.config import convert_month_str, DirectoryManager
 
 """
 Description: 

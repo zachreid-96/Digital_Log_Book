@@ -2,7 +2,7 @@ import customtkinter as ct
 
 from os import cpu_count
 from datetime import datetime
-from config import DirectoryManager
+from configs.config import DirectoryManager
 from customtkinter import ThemeManager
 
 

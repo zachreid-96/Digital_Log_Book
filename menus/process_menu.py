@@ -8,10 +8,10 @@ import tkinter as tk
 import customtkinter as ct
 
 from pathlib import Path
-from config import DirectoryManager
-from file_manager import populate_files
-from manufacturer_handler import manufacturer_multi
-from database_handler import database_add_files, barcode_wrapper
+from configs.config import DirectoryManager
+from handlers.file_manager import populate_files
+from handlers.manufacturer_handler import manufacturer_multi
+from database.database_handler import database_add_files, barcode_wrapper
 from multiprocessing import Pool, Manager, set_start_method, freeze_support
 
 freeze_support()

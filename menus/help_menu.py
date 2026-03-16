@@ -1,6 +1,6 @@
 import customtkinter as ct
 
-from config import DirectoryManager
+from configs.config import DirectoryManager
 
 class HelpMenu(ct.CTkFrame):
     def __init__(self, master):

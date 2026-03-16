@@ -2,7 +2,7 @@ import webbrowser
 
 import customtkinter as ct
 
-from config import DirectoryManager
+from configs.config import DirectoryManager
 
 
 def open_github_repo(event=None):

@@ -1,10 +1,8 @@
-import json
-
 import customtkinter as ct
 
 from pathlib import Path
 from tkinter import filedialog
-from config import DirectoryManager
+from configs.config import DirectoryManager
 
 class DirectoryMenu(ct.CTkFrame):
 
