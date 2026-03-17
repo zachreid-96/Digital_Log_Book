@@ -39,7 +39,7 @@ Returns:
     returns 2-February for 2 in 2/15/2024
 """
 
-def convert_month_str(int_month):
+def convert_month_str(int_month) -> str:
     months = {1: "January",
               2: "February",
               3: "March",
@@ -303,13 +303,11 @@ class DirectoryManager:
         with open(self.CONFIG_FILE, 'w') as f:
             json.dump(config_dict, f, indent=4, sort_keys=True)
 
-        pass
-
-    def get_inventory_file(self):
+    def get_inventory_file(self) -> str:
         return self.INVENTORY_FILE
 
-    def set_running_status(self, case):
+    def set_running_status(self, case) -> None:
         self.running = case
 
-    def is_running(self):
+    def is_running(self) -> bool:
         return self.running

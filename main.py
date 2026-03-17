@@ -2,6 +2,8 @@ import os
 import json
 import ctypes
 import shutil
+import platform
+from json import JSONDecodeError
 
 import customtkinter as ct
 
@@ -34,20 +36,23 @@ def get_window_scaling():
         return 1
 
 def upload_database():
-    manager = DirectoryManager()
-    database_file = manager.get_database_dir()
+    try:
+        manager = DirectoryManager()
+        database_file = manager.get_database_dir()
 
-    one_drive_location = os.path.join(os.environ.get("OneDrive"), "Parts Logger Database")
+        one_drive_location = os.path.join(os.environ.get("OneDrive"), "Parts Logger Database")
 
-    if not os.path.exists(one_drive_location):
-        os.mkdir(one_drive_location)
+        if not os.path.exists(one_drive_location):
+            os.mkdir(one_drive_location)
 
-    shutil.copy2(database_file, os.path.join(one_drive_location, "parts.db"))
-    return
+        shutil.copy2(database_file, os.path.join(one_drive_location, "parts.db"))
+    except TypeError:
+        pass
 
 def on_closing(event=None):
 
-    if not app.manager.is_running():
+    print(app.manager.is_running())
+    if app.manager.is_running():
         message_box = CTkMessagebox(title="Still Running...",
                                     message="Process is still running. Quitting now may result in data loss. Quit?",
                                     icon="question", option_1="No", option_2="Yes")
@@ -60,7 +65,7 @@ def on_closing(event=None):
         upload_database()
         app.destroy()
 
-class Log_Book_GUI(ct.CTk):
+class LogBook(ct.CTk):
 
     def __init__(self):
         super().__init__()
@@ -106,9 +111,16 @@ class Log_Book_GUI(ct.CTk):
                                           command=self.show_manual_menu)
         self.Manual_button.grid(row=3, column=0, padx=20, pady=10)
         manual_review_pages = self.manager.get_manual_json()
-        with open(manual_review_pages, 'r') as f:
-            data = json.load(f)
-        len_pages = len(data)
+
+        try:
+            with open(manual_review_pages, 'r') as f:
+                data = json.load(f)
+            len_pages = len(data)
+        except (JSONDecodeError, FileNotFoundError):
+            len_pages = 0
+        except Exception:
+            len_pages = 0
+
         self.Manual_button.configure(text=f"Manual Review ({len_pages})")
 
         self.Directories_button = ct.CTkButton(self.sidebar_frame, text="Directories",
@@ -224,7 +236,19 @@ class Log_Book_GUI(ct.CTk):
     """
     def setup_project(self):
 
-        pathing = os.path.join(os.environ['USERPROFILE'], 'Parts Logger')
+        os_name = platform.system()
+
+        if os_name == 'Windows':
+            pathing = os.path.join(os.environ['USERPROFILE'], 'Parts Logger')
+        elif os_name == 'Linux':
+            pathing = os.path.join(os.environ['HOME'], 'Parts Logger')
+        elif os_name == 'Darwin':
+            pathing = os.path.join(os.environ['HOME'], 'Library/Application Support')
+        else:
+            pathing = None
+
+        if not pathing:
+            return
 
         if not os.path.exists(pathing):
             os.mkdir(pathing)
@@ -235,6 +259,7 @@ class Log_Book_GUI(ct.CTk):
         inventory_pages = os.path.join(pathing, 'Inventory Pages')
         used_parts = os.path.join(pathing, 'Used Parts Logs')
         reports = os.path.join(pathing, 'Reports')
+        configs = os.path.join(pathing, 'Configs')
 
         # Cretes all needed folders if not already created
         for folder in [manual_sort, runtime_logs, ready_sort, inventory_pages, used_parts, reports]:
@@ -248,6 +273,7 @@ class Log_Book_GUI(ct.CTk):
             'logbook_dir': used_parts,
             'inventory_dir': inventory_pages,
             'reports_dir': reports,
+            'configs_dir': configs,
             'multi_cores': 0,
             'restock_days': 3,
             'last_inventory': None,
@@ -258,5 +284,5 @@ class Log_Book_GUI(ct.CTk):
 
 
 if __name__ == "__main__":
-    app = Log_Book_GUI()
+    app = LogBook()
     app.mainloop()

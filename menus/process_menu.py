@@ -18,7 +18,7 @@ freeze_support()
 
 class ProcessMenu(ct.CTkFrame):
 
-    def __init__(self, master):
+    def __init__(self, master) -> None:
         super().__init__(master)
 
         self.manager = DirectoryManager()
@@ -79,7 +79,7 @@ class ProcessMenu(ct.CTkFrame):
 
         self.update_fields()
 
-    def update_fields(self):
+    def update_fields(self) -> None:
 
         if self.manager.menu_tips:
             self.reports_menu_help.configure(text="Menu Usage")
@@ -99,7 +99,7 @@ class ProcessMenu(ct.CTkFrame):
             self.process_menu_help_4.configure(text="")
 
 
-    def run_process_multi(self):
+    def run_process_multi(self) -> None:
 
         thread = threading.Thread(target=self.thread_multi)
         thread.start()
@@ -242,10 +242,11 @@ class ProcessMenu(ct.CTkFrame):
         finally:
             self.manager.set_running_status(False)
 
-    def sort_key(self, file):
+    def sort_key(self, file) -> tuple[int, list[str]] | None:
         name = Path(file).stem.split('_')
 
         if len(name) == 3:
             return 1, name
         elif len(name) == 2:
             return 0, name
+        return None

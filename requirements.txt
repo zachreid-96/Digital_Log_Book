@@ -13,3 +13,4 @@ logging~=0.4.9.6
 CTkMessagebox~=2.7
 fitz~=0.0.1.dev2
 AppLogging~=1.0.0
+frontend~=0.0.3

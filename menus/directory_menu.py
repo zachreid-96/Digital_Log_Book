@@ -112,11 +112,11 @@ class DirectoryMenu(ct.CTkFrame):
     def save_directories_locations(self):
 
         data = {
-            "unsorted_dir": str(Path(self.unsorted_directory.get())),
-            "runlog_dir": str(Path(self.log_directory.get())),
-            "manual_sort_dir": str(Path(self.manual_sort_directory.get())),
-            "logbook_dir": str(Path(self.logbook_directory.get())),
-            "inventory_dir": str(Path(self.inventory_page_directory.get())),
-            "reports_dir": str(Path(self.reports_directory.get()))
+            "unsorted_dir": Path(self.unsorted_directory.get()),
+            "runlog_dir": Path(self.log_directory.get()),
+            "manual_sort_dir": Path(self.manual_sort_directory.get()),
+            "logbook_dir": Path(self.logbook_directory.get()),
+            "inventory_dir": Path(self.inventory_page_directory.get()),
+            "reports_dir": Path(self.reports_directory.get())
         }
         self.manager.write_settings(directories=data)

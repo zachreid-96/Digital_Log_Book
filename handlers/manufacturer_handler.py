@@ -2,8 +2,8 @@ import re
 
 from rapidfuzz import fuzz
 from datetime import datetime
-from ocr_processor import ocr_file
-from file_manager import file_manager_wrapper
+from handlers.ocr_processor import ocr_file
+from handlers.file_manager import file_manager_wrapper
 
 def clean_ocr_date_string(raw_str):
     return re.sub(r'(?<=\d)7(?=\d)', '/', raw_str)
