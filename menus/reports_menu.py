@@ -1,10 +1,11 @@
 import os
-import csv
+import csv, platform
+import sys, subprocess
 
 import customtkinter as ct
 
 from math import ceil
-from configs.config import DirectoryManager
+from configs.settings import Settings
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
@@ -26,7 +27,7 @@ class ReportsMenu(ct.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
 
         self.full_report_label = ct.CTkLabel(self, text="Generate Full Usage Reports",
                                              font=ct.CTkFont(size=15, weight="bold"))
@@ -124,7 +125,17 @@ class ReportsMenu(ct.CTkFrame):
             self.reports_menu_help_4.configure(text="")
 
     def open_report_folder(self):
-        os.startfile(self.manager.get_reports_dir())
+
+        os_name = platform.system()
+
+        if os_name == 'Windows':
+            os.startfile(self.manager.get_reports_dir())
+        elif os_name == 'Darwin':
+            subprocess.call(('open', self.manager.get_reports_dir()))
+        elif os_name == 'Linux':
+            subprocess.call(('xdg-open', self.manager.get_reports_dir()))
+        else:
+            raise Warning(f"Unsupported OS: {os_name}")
 
     def generate_full_report(self, time_frame):
 

@@ -1,10 +1,11 @@
 import os
 import csv
+import sys, platform, subprocess
 
 import customtkinter as ct
 
 from math import ceil
-from configs.config import DirectoryManager
+from configs.settings import Settings
 from datetime import datetime, timedelta
 from tkinter import filedialog, StringVar
 from dateutil.relativedelta import relativedelta
@@ -35,7 +36,7 @@ class InventoryMenu(ct.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
 
         self.inventory = self.manager.load_inventory()
         self.parts_list_display = []
@@ -109,10 +110,28 @@ class InventoryMenu(ct.CTkFrame):
         self.update_fields()
 
     def open_report_folder(self):
-        os.startfile(self.manager.get_reports_dir())
+        os_name = platform.system()
+
+        if os_name == 'Windows':
+            os.startfile(self.manager.get_reports_dir())
+        elif os_name == 'Darwin':
+            subprocess.call(('open', self.manager.get_reports_dir()))
+        elif os_name == 'Linux':
+            subprocess.call(('xdg-open', self.manager.get_reports_dir()))
+        else:
+            raise Warning(f"Unsupported OS: {os_name}")
 
     def open_inventory_csv(self):
-        os.startfile(self.manager.get_inventory_file())
+        os_name = platform.system()
+
+        if os_name == 'Windows':
+            os.startfile(self.manager.get_inventory_file())
+        elif os_name == 'Darwin':
+            subprocess.call(('open', self.manager.get_inventory_file()))
+        elif os_name == 'Linux':
+            subprocess.call(('xdg-open', self.manager.get_inventory_file()))
+        else:
+            raise Warning(f"Unsupported OS: {os_name}")
 
     def refresh_inventory(self):
         self.inventory = self.manager.load_inventory()

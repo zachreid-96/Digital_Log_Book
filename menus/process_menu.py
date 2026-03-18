@@ -8,7 +8,8 @@ import tkinter as tk
 import customtkinter as ct
 
 from pathlib import Path
-from configs.config import DirectoryManager
+from AppLogging import AppLogging
+from configs.settings import Settings
 from handlers.file_manager import populate_files
 from handlers.manufacturer_handler import manufacturer_multi
 from database.database_handler import database_add_files, barcode_wrapper
@@ -21,8 +22,8 @@ class ProcessMenu(ct.CTkFrame):
     def __init__(self, master) -> None:
         super().__init__(master)
 
-        self.manager = DirectoryManager()
-        self.logger = self.manager.get_logger()
+        self.manager = Settings()
+        self.logger = AppLogging.get_logger(__name__)
         self.manual_json = self.manager.get_manual_json()
 
         self.unsorted_label = ct.CTkLabel(self, text="Pages Ready to Sort:")

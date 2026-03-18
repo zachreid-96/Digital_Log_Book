@@ -1,12 +1,12 @@
 import customtkinter as ct
 
-from configs.config import DirectoryManager
+from configs.settings import Settings
 
 class HelpMenu(ct.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
 
         self.kyocera_scanning_label = ct.CTkLabel(self, text="Scanning Reports on Kyocera",
                                                   font=ct.CTkFont(size=15, weight="bold"))

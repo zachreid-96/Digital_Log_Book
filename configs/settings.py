@@ -62,7 +62,7 @@ class Settings:
     database_processed = 0
     longest_dir_pixel = 0
 
-    version = '2.2.0'
+    version = '2.3.0'
     appearance = 'System'
 
     config_file = Path("")
@@ -192,6 +192,9 @@ class Settings:
     def get_reports_dir(self) -> Path:
         return self.reports_dir
 
+    def get_configs_dir(self) -> Path:
+        return self.configs_dir
+
     def get_manual_json(self) -> Path:
         return Path(self.manual_sort_json).resolve()
 
@@ -275,6 +278,9 @@ class Settings:
 
     def get_inventory_file(self) -> Path:
         return self.inventory_file
+
+    def is_running(self) -> bool:
+        return self.running
 
 if __name__ == "__main__":
     settings = Settings()

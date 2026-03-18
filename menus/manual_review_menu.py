@@ -6,7 +6,7 @@ import ctypes
 import customtkinter as ct
 
 from PIL import Image
-from configs.config import DirectoryManager
+from configs.settings import Settings
 from handlers.file_manager import move_file_manual_sort
 from database.database_handler import database_add_files
 
@@ -28,7 +28,7 @@ class PDFViewer(ct.CTkFrame):
         self.bind("<Button-1>", self.remove_focus)
         self.entries = []
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
 
         self.pages = self.read_pages()
         self.current_page = 0

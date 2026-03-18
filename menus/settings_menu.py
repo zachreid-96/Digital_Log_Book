@@ -2,7 +2,7 @@ import customtkinter as ct
 
 from os import cpu_count
 from datetime import datetime
-from configs.config import DirectoryManager
+from configs.settings import Settings
 from customtkinter import ThemeManager
 
 
@@ -22,7 +22,7 @@ class SettingsMenu(ct.CTkFrame):
         self.bind("<Button-1>", self.remove_focus)
         self.entries = []
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
 
         self.cpu_core_usage_label = ct.CTkLabel(self, text="Multiprocessing CPU Core Usage",
                                                 font=ct.CTkFont(size=16, weight='bold'))

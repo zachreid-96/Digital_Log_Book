@@ -2,14 +2,16 @@ import customtkinter as ct
 
 from pathlib import Path
 from tkinter import filedialog
-from configs.config import DirectoryManager
+from AppLogging import AppLogging
+from configs.settings import Settings
 
 class DirectoryMenu(ct.CTkFrame):
 
     def __init__(self, master):
         super().__init__(master)
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
+        self.logger = AppLogging.get_logger(__name__)
 
         magic_width = self.manager.longest_dir_pixel
 
@@ -64,50 +66,62 @@ class DirectoryMenu(ct.CTkFrame):
                                             command=lambda: self.select_directory("reports"))
         self.reports_button.grid(row=6, column=8, columnspan=1, sticky="w", padx=25, pady=10)
 
+        self.config_label = ct.CTkLabel(self, text="Config:")
+        self.config_label.grid(row=6, column=0, columnspan=3, sticky="e", pady=10, padx=10)
+        self.config_directory = ct.CTkEntry(self, width=magic_width)
+        self.config_directory.grid(row=6, column=3, columnspan=4, sticky="w", padx=25, pady=10)
+        self.config_button = ct.CTkButton(self, text="Browse",
+                                           command=lambda: self.select_directory("configs"))
+        self.config_button.grid(row=6, column=8, columnspan=1, sticky="w", padx=25, pady=10)
+
         self.populate_directories()
 
     def populate_directories(self):
-        self.unsorted_directory.delete(0, len(self.manager.unsorted_dir))
-        self.unsorted_directory.insert(0, self.manager.unsorted_dir)
+        self.unsorted_directory.delete(0, len(str(self.manager.get_unsorted_dir())))
+        self.unsorted_directory.insert(0, str(self.manager.get_unsorted_dir()))
 
-        self.log_directory.delete(0, len(self.manager.runlog_dir))
-        self.log_directory.insert(0, self.manager.runlog_dir)
+        self.log_directory.delete(0, len(str(self.manager.get_runlog_dir())))
+        self.log_directory.insert(0, str(self.manager.get_runlog_dir()))
 
-        self.manual_sort_directory.delete(0, len(self.manager.manual_sort_dir))
-        self.manual_sort_directory.insert(0, self.manager.manual_sort_dir)
+        self.manual_sort_directory.delete(0, len(str(self.manager.get_manual_sort_dir())))
+        self.manual_sort_directory.insert(0, str(self.manager.get_manual_sort_dir()))
 
-        self.logbook_directory.delete(0, len(self.manager.logbook_dir))
-        self.logbook_directory.insert(0, self.manager.logbook_dir)
+        self.logbook_directory.delete(0, len(str(self.manager.get_logbook_dir())))
+        self.logbook_directory.insert(0, str(self.manager.get_logbook_dir()))
 
-        self.inventory_page_directory.delete(0, len(self.manager.inventory_dir))
-        self.inventory_page_directory.insert(0, self.manager.inventory_dir)
+        self.inventory_page_directory.delete(0, len(str(self.manager.get_inventory_dir())))
+        self.inventory_page_directory.insert(0, str(self.manager.get_inventory_dir()))
 
-        self.reports_directory.delete(0, len(self.manager.reports_dir))
-        self.reports_directory.insert(0, self.manager.reports_dir)
+        self.reports_directory.delete(0, len(str(self.manager.get_reports_dir())))
+        self.reports_directory.insert(0, str(self.manager.get_reports_dir()))
+
+        self.config_directory.delete(0, len(str(self.manager.get_configs_dir())))
+        self.config_directory.insert(0, str(self.manager.get_configs_dir()))
 
     def select_directory(self, option):
         directory = filedialog.askdirectory()
         if directory:
             if option == "unsorted":
-                self.unsorted_directory.delete(0, len(self.manager.unsorted_dir))
-                self.unsorted_directory.insert(0, str(Path(directory)))
+                self.unsorted_directory.delete(0, len(str(self.manager.get_unsorted_dir())))
+                self.unsorted_directory.insert(0, str(self.manager.get_unsorted_dir()))
             elif option == "log":
-                self.log_directory.delete(0, len(self.manager.runlog_dir))
-                self.log_directory.insert(0, str(Path(directory)))
+                self.log_directory.delete(0, len(str(self.manager.get_runlog_dir())))
+                self.log_directory.insert(0, str(self.manager.get_runlog_dir()))
             elif option == "manual_sort":
-                self.manual_sort_directory.delete(0, len(self.manager.manual_sort_dir))
-                self.manual_sort_directory.insert(0, str(Path(directory)))
+                self.manual_sort_directory.delete(0, len(str(self.manager.get_manual_sort_dir())))
+                self.manual_sort_directory.insert(0, str(self.manager.get_manual_sort_dir()))
             elif option == "logbook":
-                self.logbook_directory.delete(0, len(self.manager.logbook_dir))
-                self.logbook_directory.insert(0, str(Path(directory)))
+                self.logbook_directory.delete(0, len(str(self.manager.get_logbook_dir())))
+                self.logbook_directory.insert(0, str(self.manager.get_logbook_dir()))
             elif option == "inventory_page":
-                self.inventory_page_directory.delete(0, len(self.manager.inventory_dir))
-                self.inventory_page_directory.insert(0, str(Path(directory)))
+                self.inventory_page_directory.delete(0, len(str(self.manager.get_inventory_dir())))
+                self.inventory_page_directory.insert(0, str(self.manager.get_inventory_dir()))
             elif option == "reports":
-                self.reports_directory.delete(0, len(self.manager.reports_dir))
-                self.reports_directory.insert(0, str(Path(directory)))
-            else:
-                pass
+                self.reports_directory.delete(0, len(str(self.manager.get_reports_dir())))
+                self.reports_directory.insert(0, str(self.manager.get_reports_dir()))
+            elif option == "configs":
+                self.config_directory.delete(0, len(str(self.manager.get_configs_dir())))
+                self.config_directory.insert(0, str(self.manager.get_configs_dir()))
 
     def save_directories_locations(self):
 

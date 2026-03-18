@@ -2,7 +2,7 @@ import webbrowser
 
 import customtkinter as ct
 
-from configs.config import DirectoryManager
+from configs.settings import Settings
 
 
 def open_github_repo(event=None):
@@ -20,7 +20,7 @@ class AboutMenu(ct.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
         self.version = self.manager.version
 
         self.name_label = ct.CTkLabel(self, text=f"Digital Log Book Tool v{self.version}",

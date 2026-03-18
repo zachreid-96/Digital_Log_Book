@@ -2,15 +2,15 @@ import os
 import json
 import ctypes
 import shutil
-import platform
-from json import JSONDecodeError
 
 import customtkinter as ct
 
 from gc import collect
+from json import JSONDecodeError
+from AppLogging import AppLogging
 from menus.help_menu import HelpMenu
 from menus.about_menu import AboutMenu
-from configs.config import DirectoryManager
+from configs.settings import Settings
 from menus.process_menu import ProcessMenu
 from menus.reports_menu import ReportsMenu
 from menus.settings_menu import SettingsMenu
@@ -37,7 +37,7 @@ def get_window_scaling():
 
 def upload_database():
     try:
-        manager = DirectoryManager()
+        manager = Settings()
         database_file = manager.get_database_dir()
 
         one_drive_location = os.path.join(os.environ.get("OneDrive"), "Parts Logger Database")
@@ -51,7 +51,6 @@ def upload_database():
 
 def on_closing(event=None):
 
-    print(app.manager.is_running())
     if app.manager.is_running():
         message_box = CTkMessagebox(title="Still Running...",
                                     message="Process is still running. Quitting now may result in data loss. Quit?",
@@ -70,11 +69,8 @@ class LogBook(ct.CTk):
     def __init__(self):
         super().__init__()
 
-        self.manager = DirectoryManager()
+        self.manager = Settings()
         self.protocol("WM_DELETE_WINDOW", on_closing)
-
-        if not self.manager.is_setup():
-            self.setup_project()
 
         self.title("Digital Log Book")
         self.geometry(f"{1000}x{500}")
@@ -230,59 +226,12 @@ class LogBook(ct.CTk):
     def show_about_menu(self):
         self._switch_view(AboutMenu)
 
-    """
-    Description: 
-        Sets up the designated folder structure without user input or worry about what is needed
-    """
-    def setup_project(self):
-
-        os_name = platform.system()
-
-        if os_name == 'Windows':
-            pathing = os.path.join(os.environ['USERPROFILE'], 'Parts Logger')
-        elif os_name == 'Linux':
-            pathing = os.path.join(os.environ['HOME'], 'Parts Logger')
-        elif os_name == 'Darwin':
-            pathing = os.path.join(os.environ['HOME'], 'Library/Application Support')
-        else:
-            pathing = None
-
-        if not pathing:
-            return
-
-        if not os.path.exists(pathing):
-            os.mkdir(pathing)
-
-        manual_sort = os.path.join(pathing, 'Manual Sorting Required')
-        runtime_logs = os.path.join(pathing, 'Runtime Logs')
-        ready_sort = os.path.join(pathing, 'Ready to Sort Pages')
-        inventory_pages = os.path.join(pathing, 'Inventory Pages')
-        used_parts = os.path.join(pathing, 'Used Parts Logs')
-        reports = os.path.join(pathing, 'Reports')
-        configs = os.path.join(pathing, 'Configs')
-
-        # Cretes all needed folders if not already created
-        for folder in [manual_sort, runtime_logs, ready_sort, inventory_pages, used_parts, reports]:
-            if not os.path.exists(folder):
-                os.mkdir(folder)
-
-        json_dict = {
-            'unsorted_dir': ready_sort,
-            'runlog_dir': runtime_logs,
-            'manual_sort_dir': manual_sort,
-            'logbook_dir': used_parts,
-            'inventory_dir': inventory_pages,
-            'reports_dir': reports,
-            'configs_dir': configs,
-            'multi_cores': 0,
-            'restock_days': 3,
-            'last_inventory': None,
-            'appearance': 'System'
-        }
-
-        self.manager.write_config_file(json_dict)
-
 
 if __name__ == "__main__":
+
+    _settings = Settings()
+    _log_dir = _settings.get_runlog_dir()
+    AppLogging.setup_logger(name="LogBook", dir_log=_log_dir)
+
     app = LogBook()
     app.mainloop()
